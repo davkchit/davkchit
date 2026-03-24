@@ -1,3 +1,12 @@
+<div align="right">
+  <a href="https://github.com/davkchit/davkchit/blob/main/README.md">
+    <img src="https://raw.githubusercontent.com/stevenrskelton/flag-icon/master/png/24/country-4x3/us.png" width="24" /> 
+  </a>
+  <a href="https://github.com/davkchit/davkchit/blob/main/README_RU.md">
+    <img src="https://raw.githubusercontent.com/stevenrskelton/flag-icon/master/png/24/country-4x3/ru.png" width="24" />
+  </a>
+</div>
+
 # David Kacheishvili | AI Product Developer & Frontend Engineer 
 
 <div align="center">
