@@ -7,7 +7,7 @@
   </a>
 </div>
 
-# David Kacheishvili | AI Product Developer & Frontend Engineer 
+# David Kacheishvili <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=000000&width=800&lines=AI+Product+Developer;RAG+System+Architect;Frontend+Engineer" alt="Typing SVG" />
 
 <div align="center">
   <img src="https://komarev.com/ghpvc/?username=davkchit&color=000000&style=for-the-badge&label=PROFILE+VIEWS" alt="Views" />
