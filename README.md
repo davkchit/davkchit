@@ -1,7 +1,7 @@
-# David Kacheishvili| AI Product Developer & Frontend Engineer ⚡️
+# David Kacheishvili | AI Product Developer & Frontend Engineer 
 
 <div align="center">
-  <img src="https://komarev.com/ghpvc/?username=ТВОЙ_НИК&color=000000&style=for-the-badge&label=PROFILE+VIEWS" alt="Views" />
+  <img src="https://komarev.com/ghpvc/?username=davkchit&color=000000&style=for-the-badge&label=PROFILE+VIEWS" alt="Views" />
 </div>
 
 ---
