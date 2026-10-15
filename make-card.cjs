@@ -39,6 +39,7 @@ const rows = [
     { label: 'Заказы', value: [W('КАИ Расписание', C.white, true), W('  система для вуза, пилот', C.grey)] },
     { label: '', value: [W('Сайт театра «Ключ»', C.white, true), W('  дизайн и разработка', C.grey)] },
     { label: '', value: [W('Сайт «Рынок»', C.white, true), W('  разработка', C.grey)] },
+    { label: '', value: [W('Сайт гимназии', C.white, true), W('  WordPress, 2024', C.grey)] },
     null,
     { label: 'Проекты', value: [W('Telegram-канал', C.white, true), W('  посты пишет мой ИИ-бот', C.grey)] },
     { label: '', value: [W('YouTube-канал', C.white, true), W('  автопостинг видео', C.grey)] },
@@ -96,7 +97,7 @@ MOTTO.forEach((line, i) => {
 
 const left = MARGIN + 18;
 const after = [
-    `<text x="${left}" y="${AFTER_Y}" ${reveal()}>${spans([W('Подсказка: ', C.white), W('ссылки', C.cyan, true), W(' продублированы под картинкой', C.white)])}</text>`,
+    `<text x="${left}" y="${AFTER_Y}" ${reveal()}>${spans([W('Подсказка: ', C.white), W('ссылки', C.cyan, true), W(' под картинкой', C.white)])}</text>`,
     `<text x="${left}" y="${AFTER_Y + LINE * 1.5}" ${reveal()}>${spans([W('? ', C.green, true), W('Что дальше?', C.white, true)])}<tspan class="cursor" fill="${C.white}"> ▋</tspan></text>`,
     `<text x="${left}" y="${AFTER_Y + LINE * 2.5}" ${reveal()}>${spans([W('❯ ', C.cyan, true), W('Написать мне', C.cyan, true)])}</text>`,
     `<text x="${left}" y="${AFTER_Y + LINE * 3.5}" ${reveal()}>${spans([W('  Выйти', C.white)])}</text>`,
