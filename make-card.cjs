@@ -38,7 +38,7 @@ const rows = [
     null,
     { label: 'Заказы', value: [W('КАИ Расписание', C.white, true), W('  система для вуза, пилот', C.grey)] },
     { label: '', value: [W('Сайт театра «Ключ»', C.white, true), W('  дизайн и разработка', C.grey)] },
-    { label: '', value: [W('Сайт «Рынок»', C.white, true), W('  разработка', C.grey)] },
+    { label: '', value: [W('Сайт рынка «Южный»', C.white, true), W('  разработка', C.grey)] },
     { label: '', value: [W('Сайт гимназии', C.white, true), W('  WordPress, 2024', C.grey)] },
     null,
     { label: 'Проекты', value: [W('Telegram-канал', C.white, true), W('  посты пишет мой ИИ-бот', C.grey)] },
