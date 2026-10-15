@@ -45,6 +45,7 @@ const rows = [
     null,
     { label: 'GitHub', value: [W('https://github.com/', C.grey), W('davkchit', C.green)] },
     { label: 'Telegram', value: [W('https://t.me/', C.grey), W('davkchv', C.cyan)] },
+    { label: 'hh.ru', value: [W('https://hh.ru/resume/', C.grey), W('4cb102…4647', C.pink)] },
 ];
 
 const FONT = 15;
