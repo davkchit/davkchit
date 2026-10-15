@@ -33,7 +33,7 @@ const C = LIGHT ? {
 const W = (t, color = C.white, bold = false) => ({ t, color, bold });
 const rows = [
     { label: 'Роль', value: [W('AI Product Engineer', C.white, true), W(', от идеи до запуска')] },
-    { label: 'Подход', value: [W('Работаю с AI', C.white, true), W(', преимущественно '), W('Claude Code', C.orange, true)] },
+    { label: 'Подход', value: [W('Работаю с AI', C.white, true), W(' (SI)', C.grey), W(', преимущественно '), W('Claude Code', C.orange, true)] },
     { label: 'Учёба', value: [W('3 курс, КНИТУ-КАИ', C.white, true), W(' (вуз), IT-направление')] },
     { label: 'Опыт', value: [W('«Нинель»', C.purple, true), W('  AI-фотосессии, 3+ месяца', C.grey)] },
     null,
