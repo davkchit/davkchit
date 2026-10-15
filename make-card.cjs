@@ -104,6 +104,100 @@ const after = [
     `<text x="${left}" y="${AFTER_Y + LINE * 3.5}" ${reveal()}>${spans([W('  Выйти', C.white)])}</text>`,
 ];
 
+// Clawd, the Claude Code mascot, in the corner by the menu. It moves the way
+// it does on the Claude Code start screen when clicked: frame by frame, like
+// sprite art, never sliding smoothly. In a loop of about 9 seconds it stands
+// and blinks, looks up, cheers and squishes, then crouches, jumps, turns a
+// full circle in the air (side, back, side) and lands in a puff of dust.
+//
+// Sprites are drawn on a grid of quarter character cells, as its terminal
+// logo is: '#' is the body, the eyes are cut out of it.
+const PX = 6; // a quarter of a character cell: half its width, half its height
+const PY = 11;
+const COLS = 18;
+const shape = {
+    front: ['...############...', '...############...', '.################.', '...############...', '....#.#....#.#....'],
+    cheer: ['...############...', '.################.', '..##############..', '...############...', '....#.#....#.#....'],
+    crouch: ['..................', '...############...', '...############...', '.################.', '...############...'],
+    quarter: ['.....########.....', '.....########.....', '.....########.....', '.....########.....', '.....#.#..#.#.....'],
+    side: ['.......####.......', '.......####.......', '.......####.......', '.......####.......', '.......#..#.......'],
+};
+// Eyes: open (a tall slit), shut (a short dash: blinking or pleased), up
+// (pressed to the top edge: looking up).
+const eye = (col, row, kind) => {
+    const x = col * PX;
+    if (kind === 'shut') return { x: x - PX / 2, y: row * PY + PY * 0.35, w: PX * 2, h: PY * 0.35 };
+    if (kind === 'up') return { x, y: row * PY, w: PX, h: PY * 0.8 };
+    return { x, y: row * PY, w: PX, h: PY };
+};
+const eyes = (row, kind, cols = [5, 12]) => cols.map((col) => eye(col, row, kind));
+// Each sprite: a shape, how many rows it is lifted off the ground, its eyes,
+// the shadow left on the ground under a jump, dust on landing.
+const sprites = {
+    idle: { shape: 'front', eyes: eyes(1, 'open') },
+    blink: { shape: 'front', eyes: eyes(1, 'shut') },
+    lookUp: { shape: 'front', eyes: eyes(0, 'up') },
+    cheer: { shape: 'cheer', eyes: eyes(1, 'shut') },
+    squish: { shape: 'crouch', eyes: eyes(2, 'shut'), dust: true },
+    crouch: { shape: 'crouch', eyes: eyes(2, 'open') },
+    leap: { shape: 'cheer', lift: 1, eyes: eyes(1, 'open'), shadow: 'wide' },
+    turnRight: { shape: 'quarter', lift: 1, eyes: eyes(1, 'open', [9, 11]), shadow: 'narrow' },
+    side: { shape: 'side', lift: 1, eyes: [], shadow: 'narrow' },
+    backQuarter: { shape: 'quarter', lift: 1, eyes: [], shadow: 'narrow' },
+    back: { shape: 'front', lift: 1, eyes: [], shadow: 'narrow' },
+    turnLeft: { shape: 'quarter', lift: 1, eyes: eyes(1, 'open', [6, 8]), shadow: 'narrow' },
+    land: { shape: 'crouch', eyes: eyes(2, 'open'), dust: true },
+};
+// The loop, as [sprite, milliseconds]. The jump keeps the original's pace:
+// about 66 ms a frame.
+const timeline = [
+    ['idle', 1400], ['blink', 120], ['idle', 900], ['lookUp', 700], ['idle', 500],
+    ['cheer', 260], ['squish', 140], ['cheer', 160], ['idle', 380], ['blink', 120], ['idle', 1100],
+    ['crouch', 100], ['leap', 70], ['turnRight', 66], ['side', 66], ['backQuarter', 66], ['back', 66],
+    ['backQuarter', 66], ['side', 66], ['turnLeft', 66], ['leap', 70], ['land', 110], ['crouch', 60],
+    ['idle', 1300], ['blink', 120], ['idle', 600],
+];
+const CLAWD_LOOP = timeline.reduce((n, [, ms]) => n + ms, 0);
+const clawdW = COLS * PX;
+const clawdH = 5 * PY;
+const clawdX = MARGIN + WIN_W - 40 - clawdW;
+const clawdY = AFTER_Y + LINE * 3.5 - clawdH + 4;
+// One path per sprite: separate squares would show hairline seams.
+const silhouette = (rows, lift) => {
+    let d = '';
+    rows.forEach((row, r) => [...row].forEach((ch, c) => {
+        if (ch === '#') d += `M${c * PX} ${(r - lift) * PY}h${PX}v${PY}h-${PX}z`;
+    }));
+    return d;
+};
+const GROUND = 5 * PY + 3;
+const puff = (x) => `<path d="M${x} ${4.5 * PY}l3 -3l3 3l3 -3" fill="none" stroke="${C.grey}" stroke-width="1.5"/>`;
+const drawSprite = (name, sp) => {
+    const lift = sp.lift ?? 0;
+    const cut = sp.eyes.map((e) => `<rect x="${e.x}" y="${e.y - lift * PY}" width="${e.w}" height="${e.h}" fill="${C.window}"/>`).join('');
+    const shadow = sp.shadow === 'wide' ? `<rect x="${5 * PX}" y="${GROUND}" width="${8 * PX}" height="2" fill="${C.grey}"/>`
+        : sp.shadow === 'narrow' ? `<rect x="${8 * PX}" y="${GROUND}" width="${2 * PX}" height="2" fill="${C.grey}"/>` : '';
+    const dust = sp.dust ? puff(-12) + puff(COLS * PX + 3) : '';
+    return `<g class="cf-${name}"><path fill="${C.orange}" d="${silhouette(shape[sp.shape], sp.lift ?? 0)}"/>${cut}${shadow}${dust}</g>`;
+};
+// A sprite is visible only while the timeline is on it: one keyframe rule per
+// sprite, opacity 1 over its spans and 0 elsewhere, switched without easing.
+const pct = (ms) => +(ms / CLAWD_LOOP * 100).toFixed(3);
+const spansOf = {};
+let at = 0;
+for (const [name, ms] of timeline) {
+    (spansOf[name] ??= []).push([at, at + ms]);
+    at += ms;
+}
+const clawdCss = Object.entries(spansOf).map(([name, list]) => {
+    const keys = [`0%{opacity:${list[0][0] === 0 ? 1 : 0}}`];
+    for (const [a, b] of list) keys.push(`${pct(a)}%{opacity:1}`, `${pct(b)}%{opacity:0}`);
+    return `.cf-${name}{opacity:0;animation:cf-${name} ${CLAWD_LOOP}ms step-end infinite}@keyframes cf-${name}{${keys.join('')}}`;
+}).join('\n');
+// The position sits on its own group: the fade-in's CSS transform would
+// replace a transform attribute on the same element.
+const clawd = `<g transform="translate(${clawdX} ${clawdY})"><g class="clawd"><g ${reveal()}>${Object.entries(sprites).map(([name, sp]) => drawSprite(name, sp)).join('')}</g></g></g>`;
+
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${SVG_W}" height="${SVG_H}" viewBox="0 0 ${SVG_W} ${SVG_H}">
 <style>
 ${face(400, 'latin', LATIN)}${face(700, 'latin', LATIN)}${face(400, 'cyrillic', CYRILLIC)}@font-face{font-family:JBM;font-weight:400;font-style:italic;src:url(data:font/woff2;base64,${font('jetbrains-mono-latin-400-italic.woff2')}) format('woff2');unicode-range:${LATIN};}${face(700, 'cyrillic', CYRILLIC)}
@@ -112,7 +206,8 @@ text{font-family:JBM,ui-monospace,Menlo,Consolas,monospace;font-size:${FONT}px;w
 @keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .cursor{animation:blink 1.1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.r{animation:none;opacity:1}.cursor{animation:none}}
+${clawdCss}
+@media (prefers-reduced-motion:reduce){.r{animation:none;opacity:1}.cursor{animation:none}.clawd [class^="cf-"]{animation:none;opacity:0}.clawd .cf-idle{opacity:1}}
 </style>
 <defs><filter id="shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity="${C.shadow}"/></filter></defs>
 <rect x="${MARGIN}" y="${MARGIN}" width="${WIN_W}" height="${WIN_H}" rx="12" fill="${C.window}" stroke="${C.edge}" filter="url(#shadow)"/>
@@ -123,6 +218,7 @@ text{font-family:JBM,ui-monospace,Menlo,Consolas,monospace;font-size:${FONT}px;w
 <rect x="${BOX_X}" y="${BOX_Y}" width="${BOX_W}" height="${BOX_H}" fill="none" stroke="${C.border}" stroke-width="1.5"/>
 ${lines.join('\n')}
 ${after.join('\n')}
+${clawd}
 </svg>
 `;
 
