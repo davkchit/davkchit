@@ -32,7 +32,7 @@ const C = LIGHT ? {
 // One row: a right-aligned bold label and coloured pieces of value.
 const W = (t, color = C.white, bold = false) => ({ t, color, bold });
 const rows = [
-    { label: 'Роль', value: [W('AI Product', C.white, true), W(', от идеи до запуска с ИИ')] },
+    { label: 'Роль', value: [W('AI Product Engineer', C.white, true), W(', от идеи до запуска')] },
     { label: 'Учёба', value: [W('3 курс, КНИТУ-КАИ', C.white, true), W(' (вуз), IT-направление')] },
     { label: 'Опыт', value: [W('«Нинель»', C.purple, true), W('  AI-фотосессии, 3+ месяца', C.grey)] },
     null,
