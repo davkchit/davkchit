@@ -20,12 +20,12 @@ const LIGHT = process.argv[3] === 'light';
 const C = LIGHT ? {
     window: '#ffffff', bar: '#eceef3', barText: '#4c4f69', border: '#40a02b',
     white: '#1f2330', grey: '#8c8fa1', green: '#2f8a1f', pink: '#d20f39',
-    cyan: '#0b7fb3', blue: '#1e66f5', purple: '#7c3aed', dim: '#8c8fa1',
+    cyan: '#0b7fb3', orange: '#c2562f', blue: '#1e66f5', purple: '#7c3aed', dim: '#8c8fa1',
     edge: '#d0d7de', shadow: 0.16,
 } : {
     window: '#232333', bar: '#2d2d3f', barText: '#c7c7d4', border: '#8fd28f',
     white: '#e7e7f0', grey: '#6f7389', green: '#a6e3a1', pink: '#f38ba8',
-    cyan: '#89dceb', blue: '#89b4fa', purple: '#8f7cf7', dim: '#9399b2',
+    cyan: '#89dceb', orange: '#e8956f', blue: '#89b4fa', purple: '#8f7cf7', dim: '#9399b2',
     edge: 'none', shadow: 0.35,
 };
 
@@ -33,6 +33,7 @@ const C = LIGHT ? {
 const W = (t, color = C.white, bold = false) => ({ t, color, bold });
 const rows = [
     { label: 'Роль', value: [W('AI Product Engineer', C.white, true), W(', от идеи до запуска')] },
+    { label: 'Подход', value: [W('Работаю с ИИ', C.white, true), W(', преимущественно '), W('Claude Code', C.orange, true)] },
     { label: 'Учёба', value: [W('3 курс, КНИТУ-КАИ', C.white, true), W(' (вуз), IT-направление')] },
     { label: 'Опыт', value: [W('«Нинель»', C.purple, true), W('  AI-фотосессии, 3+ месяца', C.grey)] },
     null,
